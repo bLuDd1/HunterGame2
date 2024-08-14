@@ -23,6 +23,7 @@ struct MainMenuView: View {
                     NavigationLink(destination: MapView()) {
                         Image("play1")
                             .offset(y: -50)
+                            
                     }
                 }
             }
