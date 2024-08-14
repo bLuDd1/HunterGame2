@@ -6,10 +6,24 @@
 //
 
 import SwiftUI
+import SpriteKit
 
 struct GameView: View {
+    var scene: SKScene {
+        let scene = GameScene()
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let screenSize = windowScene.screen.bounds.size
+                scene.size = screenSize
+        }
+        scene.scaleMode = .aspectFill
+        return scene
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        SpriteView(scene: scene)
+            .ignoresSafeArea()
+            .navigationBarBackButtonHidden(true)
+            .statusBar(hidden: true)
     }
 }
 

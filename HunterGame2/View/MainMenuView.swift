@@ -28,6 +28,7 @@ struct MainMenuView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
+            .statusBar(hidden: true)
         }
     }
 }

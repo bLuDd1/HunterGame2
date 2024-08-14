@@ -37,6 +37,7 @@ struct MapView: View {
             
         }
         .navigationBarBackButtonHidden(true)
+        .statusBar(hidden: true)
     }
 }
 
