@@ -26,6 +26,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let candyCategory: UInt32 = 0x1 << 1
     let bombCategory: UInt32 = 0x1 << 2
     
+    var onGameEnd: (() -> Void)?
+    
     override func didMove(to view: SKView) {
         createBackgroundGame(in: self)
         
@@ -142,7 +144,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         let halfPlayerHeight = player.size.height / 2
         let screenHeight = self.frame.height
-        let screenWidth = self.frame.width
         
         if player.position.y < halfPlayerHeight {
             player.position.y = halfPlayerHeight
@@ -158,25 +159,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
         
     func didBegin(_ contact: SKPhysicsContact) {
-        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-        
-        if contactMask == (playerCategory | candyCategory) {
-            if let monster = contact.bodyA.categoryBitMask == candyCategory ? contact.bodyA.node : contact.bodyB.node {
-                monster.removeFromParent()
-                score += 1
-                scoreLabel.text = "Score: \(score)"
-            }
-        } else if contactMask == (playerCategory | bombCategory) {
-            if let slime = contact.bodyA.categoryBitMask == bombCategory ? contact.bodyA.node : contact.bodyB.node {
-                slime.removeFromParent()
-                lives -= 1
-                livesLabel.text = "Lives: \(lives)"
-                    
-                if lives == 0 {
-                   print("over")
+            let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+            
+            if contactMask == (playerCategory | candyCategory) {
+                if let monster = contact.bodyA.categoryBitMask == candyCategory ? contact.bodyA.node : contact.bodyB.node {
+                    monster.removeFromParent()
+                    score += 1
+                    scoreLabel.text = "Score: \(score)"
+                }
+            } else if contactMask == (playerCategory | bombCategory) {
+                if let slime = contact.bodyA.categoryBitMask == bombCategory ? contact.bodyA.node : contact.bodyB.node {
+                    slime.removeFromParent()
+                    lives -= 1
+                    livesLabel.text = "Lives: \(lives)"
+                        
+                    if lives == 0 {
+                        onGameEnd?()
+                    }
                 }
             }
         }
-    }
    
 }
